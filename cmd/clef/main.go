@@ -199,7 +199,6 @@ func init() {
 	}
 	app.Action = signer
 	app.Commands = []cli.Command{initCommand, attestCommand, addCredentialCommand}
-
 }
 func main() {
 	if err := app.Run(os.Args); err != nil {
