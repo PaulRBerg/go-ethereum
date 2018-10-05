@@ -17,23 +17,23 @@
 package core
 
 import (
+	"context"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/crypto"
-	"math/big"
+	 "math/big"
 )
 
 type TypedData struct {
-	Types map[string]interface{}	`json:"types"`
-	PrimaryType		string			`json:"primaryType"`
-	Message map[string]interface{}	`json:"message"`
+	Types map[string]	interface{}		`json:"types"`
+	PrimaryType			string			`json:"primaryType"`
+	Message map[string]	interface{}		`json:"message"`
 }
 
 type EIP712Domain struct {
 	Name 		string 			`json:"name"`
 	Version		string 			`json:"version"`
-	ChainId		*big.Int		`json:"chainId"`
+	ChainId		big.Int			`json:"chainId"`
 	Address		common.Address	`json:"address"`
 	Salt		hexutil.Bytes	`json:"salt"`
 }
@@ -46,17 +46,14 @@ type EncodedData struct {
 
 }
 
-func SignDataStructuredV2(data TypedData) ([]byte, error) {
-	// validating `domainSeparator`
-	fmt.Println("data", data)
-
-	msg := "TODO"
-	return crypto.Keccak256([]byte(msg)), nil
-}
-
-func encodeType(typeValue EncodedDataType) {
-
-}
-func encodeData(data EncodedData) {
-
+// Typed data according to EIP712
+//
+// If the format "\x19\x01" ‖ domainSeparator ‖ hashStruct(message)` is not respected,
+// an error is returned
+func (api *SignerAPI) SignStructuredData(ctx context.Context, addr common.MixedcaseAddress, data TypedData) (hexutil.Bytes, error) {
+	fmt.Println("what are you, data?", data)
+	fmt.Println("types.EIP712Domain", data.Types["EIP712Domain"])
+	fmt.Println("primaryType", data.PrimaryType)
+	fmt.Println("message.from", data.Message["from"])
+	return []byte("0xdeadbeef"), nil
 }

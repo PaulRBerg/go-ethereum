@@ -438,5 +438,6 @@ func (s *Server) readRequest(codec ServerCodec) ([]*serverRequest, bool, Error) 
 		requests[i] = &serverRequest{id: r.id, err: &methodNotFoundError{r.service, r.method}}
 	}
 
+	fmt.Println("There we go again!", requests[0].args)
 	return requests, batch, nil
 }

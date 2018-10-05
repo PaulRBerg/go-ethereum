@@ -221,6 +221,13 @@ func NewHTTPServer(cors []string, vhosts []string, timeouts HTTPTimeouts, srv *S
 	}
 }
 
+type FancyBody struct {
+	Jsonrpc string        `json:"jsonrpc"`
+	Method  string        `json:"method"`
+	Params  []interface{} `json:"params"`
+	ID      int           `json:"id"`
+}
+
 // ServeHTTP serves JSON-RPC requests over HTTP.
 func (srv *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Permit dumb empty requests for remote health-checks (AWS)
@@ -249,8 +256,36 @@ func (srv *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	codec := NewJSONCodec(&httpReadWriteNopCloser{body, w})
 	defer codec.Close()
 
-	w.Header().Set("content-type", contentType)
-	srv.ServeSingleRequest(ctx, codec, OptionMethodInvocation)
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// Unmarshal
+	var data FancyBody
+	err = json.Unmarshal(b, &data)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Println("data.Jsonrpc", data.Jsonrpc)
+	fmt.Println("data.Method", data.Method)
+	fmt.Println("data.Params", data.Params)
+	fmt.Println("data.ID", data.ID)
+
+	output, err := json.Marshal(data)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	w.Header().Set("content-type", "application/json")
+	w.Write(output)
+
+	//w.Header().Set("content-type", contentType)
+	//srv.ServeSingleRequest(ctx, codec, OptionMethodInvocation)
 }
 
 // validateRequest returns a non-zero response code and error message if the

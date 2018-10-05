@@ -53,7 +53,7 @@ type ExternalAPI interface {
 	// SignData - request to sign the given data (plus prefix)
 	SignData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data hexutil.Bytes) (hexutil.Bytes, error)
 	// SignStructuredData - request to sign the given structured data (plus prefix)
-	SignStructuredData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data TypedData) (hexutil.Bytes, error)
+	SignStructuredData(ctx context.Context, addr common.MixedcaseAddress, data TypedData) (hexutil.Bytes, error)
 	// EcRecover - recover public key from given message and signature
 	EcRecover(ctx context.Context, contentType string, data hexutil.Bytes, sig hexutil.Bytes) (common.Address, error)
 	// Export - request to export an account
@@ -545,7 +545,7 @@ func (api *SignerAPI) SignTransaction(ctx context.Context, args SendTxArgs, meth
 // where the V value will be 27 or 28 for legacy reasons.
 func (api *SignerAPI) SignData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data hexutil.Bytes) (hexutil.Bytes, error) {
 
-	fmt.Println("Why are we here bro?")
+	fmt.Println("Why are we here broz?")
 	var req, err = api.DetermineSignatureFormat(contentType, data)
 	if err != nil {
 		return nil, err
@@ -582,10 +582,9 @@ func (api *SignerAPI) SignData(ctx context.Context, contentType string, addr com
 //
 // If the format "\x19\x01" ‖ domainSeparator ‖ hashStruct(message)` is not respected,
 // an error is returned
-func (api *SignerAPI) SignStructuredData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data TypedData) (hexutil.Bytes, error) {
+func (api *SignerAPI) SignStructuredDataDead(ctx context.Context, addr common.MixedcaseAddress, data TypedData) (hexutil.Bytes, error) {
 	fmt.Println("what are you, data?", data)
-	fmt.Println("wtf")
-	return []byte("0xdeadbeef"), nil
+	return common.Hex2Bytes("0xdeadbeef"), nil
 }
 
 // Determines which signature method should be used based upon the mime type

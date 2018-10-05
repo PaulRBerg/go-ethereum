@@ -19,7 +19,7 @@ Struct named `EIP712Domain` with one or more of the below fields:
 ## B) hashStruct
 `hashStruct(s : 𝕊) = keccak256(typeHash ‖ encodeData(s))`
 <br/>
-``ypeHash = keccak256(encodeType(typeOf(s)))`
+`typeHash = keccak256(encodeType(typeOf(s)))`
 
 ### i) encodeType
 - `name ‖ "(" ‖ member₁ ‖ "," ‖ member₂ ‖ "," ‖ … ‖ memberₙ ")"`
@@ -52,9 +52,8 @@ Struct named `EIP712Domain` with one or more of the below fields:
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "account_signData",
+  "method": "account_signStructuredData",
   "params": [
-  	"data/structured",
     "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
     {
       "types": {

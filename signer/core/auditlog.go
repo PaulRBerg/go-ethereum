@@ -65,16 +65,16 @@ func (l *AuditLogger) SignTransaction(ctx context.Context, args SendTxArgs, meth
 
 func (l *AuditLogger) SignData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data hexutil.Bytes) (hexutil.Bytes, error) {
 	l.log.Info("SignData", "type", "request", "metadata", MetadataFromContext(ctx).String(),
-		"addr", addr.String(), "data", common.Bytes2Hex(data), "content-type", contentType)
+		"content-type", contentType, "addr", addr.String(), "data", common.Bytes2Hex(data))
 	b, e := l.api.SignData(ctx, contentType, addr, data)
 	l.log.Info("SignData", "type", "response", "data", common.Bytes2Hex(b), "error", e)
 	return b, e
 }
 
-func (l *AuditLogger) SignStructuredData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data TypedData) (hexutil.Bytes, error) {
+func (l *AuditLogger) SignStructuredData(ctx context.Context, addr common.MixedcaseAddress, data TypedData) (hexutil.Bytes, error) {
 	l.log.Info("SignStructuredData", "type", "request", "metadata", MetadataFromContext(ctx).String(),
-		"addr", addr.String(), "data", data, "content-type", contentType)
-	b, e := l.api.SignData(ctx, contentType, addr, common.Hex2Bytes(data.PrimaryType))
+		"addr", addr.String(), "data", data)
+	b, e := l.api.SignStructuredData(ctx, addr, TypedData{})
 	l.log.Info("SignStructuredData", "type", "response", "data", common.Bytes2Hex(b), "error", e)
 	return b, e
 }

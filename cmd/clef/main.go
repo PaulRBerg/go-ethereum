@@ -596,7 +596,7 @@ func testExternalUI(api *core.SignerAPI) {
 	checkErr("SignTransaction", err)
 	_, err = api.SignData(ctx, "data/plain", common.MixedcaseAddress{}, common.Hex2Bytes("01020304"))
 	checkErr("SignData", err)
-	_, err = api.SignStructuredData(ctx, "data/plain", common.MixedcaseAddress{}, core.TypedData{})
+	_, err = api.SignStructuredData(ctx, common.MixedcaseAddress{}, core.TypedData{})
 	checkErr("SignStructuredData", err)
 	_, err = api.List(ctx)
 	checkErr("List", err)
