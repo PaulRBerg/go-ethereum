@@ -24,7 +24,13 @@ import (
 	"math/big"
 )
 
-type DomainSeparator struct {
+type TypedData struct {
+	Types map[string]interface{}	`json:"types"`
+	PrimaryType		string			`json:"primaryType"`
+	Message map[string]interface{}	`json:"message"`
+}
+
+type EIP712Domain struct {
 	Name 		string 			`json:"name"`
 	Version		string 			`json:"version"`
 	ChainId		*big.Int		`json:"chainId"`
@@ -32,24 +38,25 @@ type DomainSeparator struct {
 	Salt		hexutil.Bytes	`json:"salt"`
 }
 
+type EncodedDataType struct {
+
+}
+
 type EncodedData struct {
 
 }
 
-// SignDataStructured signs the given data adhering to the EIP712 standard.
-//
-// https://github.com/ethereum/EIPs/issues/712
-func SignDataStructuredV2(data hexutil.Bytes) ([]byte, error) {
+func SignDataStructuredV2(data TypedData) ([]byte, error) {
 	// validating `domainSeparator`
 	fmt.Println("data", data)
-	a, b := data.MarshalText()
-	fmt.Println("a", a)
-	fmt.Println("b", b)
-
-	// validating types
-
-	// generating hash struct
 
 	msg := "TODO"
-	return crypto.Keccak256([]byte(msg)), msg
+	return crypto.Keccak256([]byte(msg)), nil
+}
+
+func encodeType(typeValue EncodedDataType) {
+
+}
+func encodeData(data EncodedData) {
+
 }

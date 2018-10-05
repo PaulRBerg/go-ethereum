@@ -16,7 +16,7 @@ Struct named `EIP712Domain` with one or more of the below fields:
 - `address verifyingContract`
 - `bytes32 salt`
 
-## C) hashStruct
+## B) hashStruct
 `hashStruct(s : 𝕊) = keccak256(typeHash ‖ encodeData(s))`
 <br/>
 ``ypeHash = keccak256(encodeType(typeOf(s)))`
@@ -47,13 +47,14 @@ Struct named `EIP712Domain` with one or more of the below fields:
     - `array`       => `keccak256(encodeData(array))`
     - `struct`      => `rec(keccak256(hashStruct(struct)))`
 
-## D) Example
+## C) Example
 ### Query
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "eth_signTypedData",
+  "method": "account_signData",
   "params": [
+  	"data/structured",
     "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
     {
       "types": {

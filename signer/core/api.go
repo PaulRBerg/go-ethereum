@@ -52,6 +52,8 @@ type ExternalAPI interface {
 	SignTransaction(ctx context.Context, args SendTxArgs, methodSelector *string) (*ethapi.SignTransactionResult, error)
 	// SignData - request to sign the given data (plus prefix)
 	SignData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data hexutil.Bytes) (hexutil.Bytes, error)
+	// SignStructuredData - request to sign the given structured data (plus prefix)
+	SignStructuredData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data TypedData) (hexutil.Bytes, error)
 	// EcRecover - recover public key from given message and signature
 	EcRecover(ctx context.Context, contentType string, data hexutil.Bytes, sig hexutil.Bytes) (common.Address, error)
 	// Export - request to export an account
@@ -543,6 +545,7 @@ func (api *SignerAPI) SignTransaction(ctx context.Context, args SendTxArgs, meth
 // where the V value will be 27 or 28 for legacy reasons.
 func (api *SignerAPI) SignData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data hexutil.Bytes) (hexutil.Bytes, error) {
 
+	fmt.Println("Why are we here bro?")
 	var req, err = api.DetermineSignatureFormat(contentType, data)
 	if err != nil {
 		return nil, err
@@ -575,6 +578,16 @@ func (api *SignerAPI) SignData(ctx context.Context, contentType string, addr com
 	return signature, nil
 }
 
+// Typed data according to EIP712
+//
+// If the format "\x19\x01" ‖ domainSeparator ‖ hashStruct(message)` is not respected,
+// an error is returned
+func (api *SignerAPI) SignStructuredData(ctx context.Context, contentType string, addr common.MixedcaseAddress, data TypedData) (hexutil.Bytes, error) {
+	fmt.Println("what are you, data?", data)
+	fmt.Println("wtf")
+	return []byte("0xdeadbeef"), nil
+}
+
 // Determines which signature method should be used based upon the mime type
 func (api *SignerAPI) DetermineSignatureFormat(contentType string, data hexutil.Bytes) (*SignDataRequest, error) {
 	var req *SignDataRequest
@@ -597,20 +610,7 @@ func (api *SignerAPI) DetermineSignatureFormat(contentType string, data hexutil.
 		req = &SignDataRequest{Rawdata: data, Message: msg, Hash: sighash, ContentType: mediaType}
 	case ApplicationValidator.Mime:
 		// Data with an intended validator
-
 		sighash, msg := SignDataWithValidator(data)
-		req = &SignDataRequest{Rawdata: data, Message: msg, Hash: sighash, ContentType: mediaType}
-	case DataStructured.Mime:
-		// Typed data according to EIP712
-		//
-		// If the format "\x19\x01" ‖ domainSeparator ‖ hashStruct(message)` is not respected,
-		// an error is returned
-
-		sighash, err := SignDataStructuredV2(data)
-		if err != nil {
-			return nil, err
-		}
-		msg := fmt.Sprintf("Structured data %s", data)
 		req = &SignDataRequest{Rawdata: data, Message: msg, Hash: sighash, ContentType: mediaType}
 	case DataPlain.Mime:
 		// Sign calculates an Ethereum ECDSA signature for:
@@ -675,16 +675,6 @@ func SignDataWithValidator(data []byte) ([]byte, string) {
 //
 // https://github.com/ethereum/EIPs/issues/712
 func SignDataStructured(data hexutil.Bytes) ([]byte, error) {
-	// validating `domainSeparator`
-	fmt.Println("data", data)
-	a, b := data.MarshalText()
-	fmt.Println("a", a)
-	fmt.Println("b", b)
-
-	// validating types
-
-	// generating hash struct
-
 	msg := "TODO"
 	return crypto.Keccak256([]byte(msg)), nil
 }
