@@ -602,8 +602,15 @@ func (api *SignerAPI) DetermineSignatureFormat(contentType string, data hexutil.
 		req = &SignDataRequest{Rawdata: data, Message: msg, Hash: sighash, ContentType: mediaType}
 	case DataStructured.Mime:
 		// Typed data according to EIP712
+		//
+		// If the format "\x19\x01" ‖ domainSeparator ‖ hashStruct(message)` is not respected,
+		// an error is returned
 
-		sighash, msg := SignDataStructured(data)
+		sighash, err := SignDataStructuredV2(data)
+		if err != nil {
+			return nil, err
+		}
+		msg := fmt.Sprintf("Structured data %s", data)
 		req = &SignDataRequest{Rawdata: data, Message: msg, Hash: sighash, ContentType: mediaType}
 	case DataPlain.Mime:
 		// Sign calculates an Ethereum ECDSA signature for:
@@ -667,9 +674,19 @@ func SignDataWithValidator(data []byte) ([]byte, string) {
 // SignDataStructured signs the given message according to EIP712.
 //
 // https://github.com/ethereum/EIPs/issues/712
-func SignDataStructured(data []byte) ([]byte, string) {
+func SignDataStructured(data hexutil.Bytes) ([]byte, error) {
+	// validating `domainSeparator`
+	fmt.Println("data", data)
+	a, b := data.MarshalText()
+	fmt.Println("a", a)
+	fmt.Println("b", b)
+
+	// validating types
+
+	// generating hash struct
+
 	msg := "TODO"
-	return crypto.Keccak256([]byte(msg)), msg
+	return crypto.Keccak256([]byte(msg)), nil
 }
 
 // SignDataPlain is a helper function that calculates a hash for the given message that can be

@@ -250,12 +250,6 @@ func signApplicationValidator(t *testing.T) {
 }
 
 func signApplicationClique(t *testing.T) {
-	// https://etherscan.io/block/1
-	//header := &types.Header{
-	//	"0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
-	//	"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
-	//	"0x05a56e2d52c817161883f50c441c3228cfe54d9f",
-	//}
 	// TODO
 }
 
