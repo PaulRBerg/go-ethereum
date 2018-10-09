@@ -256,36 +256,37 @@ func (srv *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	codec := NewJSONCodec(&httpReadWriteNopCloser{body, w})
 	defer codec.Close()
 
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+	w.Header().Set("content-type", contentType)
+	srv.ServeSingleRequest(ctx, codec, OptionMethodInvocation)
 
+	//_, err := ioutil.ReadAll(r.Body)
+	//defer r.Body.Close()
+	//if err != nil {
+	//	http.Error(w, err.Error(), 500)
+	//	return
+	//}
+
+	// Temporary Custom Code
 	// Unmarshal
-	var data FancyBody
-	err = json.Unmarshal(b, &data)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	fmt.Println("data.Jsonrpc", data.Jsonrpc)
-	fmt.Println("data.Method", data.Method)
-	fmt.Println("data.Params", data.Params)
-	fmt.Println("data.ID", data.ID)
-
-	output, err := json.Marshal(data)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	w.Header().Set("content-type", "application/json")
-	w.Write(output)
-
-	//w.Header().Set("content-type", contentType)
-	//srv.ServeSingleRequest(ctx, codec, OptionMethodInvocation)
+	//var data FancyBody
+	//err = json.Unmarshal(b, &data)
+	//if err != nil {
+	//	http.Error(w, err.Error(), 500)
+	//	return
+	//}
+	//
+	//fmt.Println("data.Jsonrpc", data.Jsonrpc)
+	//fmt.Println("data.Method", data.Method)
+	//fmt.Println("data.Params", data.Params)
+	//fmt.Println("data.ID", data.ID)
+	//
+	//output, err := json.Marshal(data)
+	//if err != nil {
+	//	http.Error(w, err.Error(), 500)
+	//	return
+	//}
+	//w.Header().Set("content-type", "application/json")
+	//w.Write(output)
 }
 
 // validateRequest returns a non-zero response code and error message if the
