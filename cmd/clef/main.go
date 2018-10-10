@@ -306,9 +306,9 @@ func initialize(c *cli.Context) error {
 		// If using the stdioui, we can't do the 'confirm'-flow
 		fmt.Fprintf(logOutput, legalWarning)
 	} else {
-		if !confirm(legalWarning) {
-			return fmt.Errorf("aborted by user")
-		}
+		//if !confirm(legalWarning) {
+		//	return fmt.Errorf("aborted by user")
+		//}
 	}
 
 	log.Root().SetHandler(log.LvlFilterHandler(log.Lvl(c.Int(logLevelFlag.Name)), log.StreamHandler(logOutput, log.TerminalFormat(true))))

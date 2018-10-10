@@ -25,9 +25,10 @@ import (
 )
 
 type TypedData struct {
-	Types map[string]	interface{}		`json:"types"`
-	PrimaryType			string			`json:"primaryType"`
-	Message map[string]	interface{}		`json:"message"`
+	Types 		map[string] interface{}		`json:"types"`
+	PrimaryType	string						`json:"primaryType"`
+	Domain 		map[string] interface{}		`json:"domain"`
+	Message 	map[string]	interface{}		`json:"message"`
 }
 
 type EIP712Domain struct {
